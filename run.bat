@@ -1,57 +1,58 @@
 @echo off
 chcp 65001 >nul
-title 鳴潮體力監控助手 - 環境檢查與啟動器
+title 鳴潮體力監控工具 - 啟動中
 
 echo ======================================================
-echo    正在檢測本機 Python 環境與套件依賴...
+echo           [鳴潮體力小工具] 正在檢查環境與更新
 echo ======================================================
 
-:: 1. 檢測電腦是否安裝 Python
-python --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [警告] 尚未檢測到 Python 環境！
-    echo 正在自動開啟瀏覽器前往 Python 3.11 官方下載頁面...
-    start https://www.python.org/downloads/release/python-3118/
-    echo.
-    echo 請在安裝時務必勾選【Add python.exe to PATH】選項！
-    echo 安裝完成後，請重新雙擊此 run.bat 啟動。
-    pause
-    exit /b
+:: 1. 檢查並更新 Git 程式碼 (僅在 Git 倉庫環境生效)
+if exist ".git" (
+    echo [*] 正在檢查 GitHub 版本更新...
+    :: 抓取遠端最新資訊
+    git fetch origin main >nul 2>&1
+    :: 檢查本地與遠端是否有落後
+    git status -uno | findstr /C:"Your branch is behind" >nul 2>&1
+    if not errorlevel 1 (
+        echo [!] 發現新版本！正在自動更新程式碼...
+        git pull origin main
+        echo [+] 程式碼更新完成！
+    ) else (
+        echo [+] 程式碼已是最新版本。
+    )
+) else (
+    echo [i] 未偵測到 Git 儲存庫，略過線上更新。
 )
 
-:: 2. 檢測虛擬環境 (venv)，沒有就自動建立
-if not exist "venv\" (
-    echo [首次運行] 正在為本專案建立獨立虛擬環境 (venv)...
+echo.
+
+:: 2. 檢查或建立 Python 虛擬環境
+if not exist "venv\Scripts\activate.bat" (
+    echo [*] 正在建立虛擬環境 venv...
     python -m venv venv
-    if %errorlevel% neq 0 (
-        echo [錯誤] 虛擬環境建立失敗！請確認 Python 支援 venv。
+    if errorlevel 1 (
+        echo [X] 建立虛擬環境失敗，請確認已安裝 Python！
         pause
         exit /b
     )
 )
 
-:: 3. 啟用獨立虛擬環境
+:: 3. 啟用虛擬環境
 call venv\Scripts\activate.bat
 
-:: 4. 檢查並自動安裝 PyTorch (CPU 穩定版)
-python -c "import torch" >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [安裝中] 正在下載並安裝 PyTorch (約 150MB，請稍候)...
-    pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+:: 4. 自動檢查並補齊缺失的 Python 套件
+if exist "requirements.txt" (
+    echo [*] 正在檢查套件依賴 (requirements.txt)...
+    pip install -r requirements.txt --quiet
 )
 
-:: 5. 檢查並自動安裝其餘必要套件
-python -c "import easyocr, pyautogui, pygetwindow, requests, PIL" >nul 2>&1
-if %errorlevel% neq 0 (
-    echo [安裝中] 正在安裝其餘相依套件 (EasyOCR, PyAutoGUI, 等)...
-    pip install -r requirements.txt
-)
-
+echo.
 echo ======================================================
-echo    環境檢查完成，正在啟動主程式...
+echo               [啟動成功] 正在開啟主介面...
 echo ======================================================
+echo.
 
-:: 6. 啟動 GUI 主程式
+:: 5. 啟動主程式
 python main_gui.py
 
 pause
