@@ -1,0 +1,22 @@
+# 虛擬環境 (絕對不要上傳，體積巨大)
+venv/
+env/
+ENV/
+
+# Python 編譯暫存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 包含個人隱私與 Webhook 的設定檔
+config.json
+
+# 執行時產生的暫存截圖
+*.png
+temp_card*.png
+
+# VS Code 個人設定
+.vscode/
+
+# 執行庫安裝檔暫存
+*.exe

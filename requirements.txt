@@ -1,0 +1,7 @@
+pyautogui
+pygetwindow
+pillow
+requests
+torch
+torchvision
+easyocr

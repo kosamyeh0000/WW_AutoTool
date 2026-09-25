@@ -1,0 +1,15 @@
+{
+    "launcher_path": "",
+    "webhook_url": "",
+    "card_rect": {
+        "left": 0.032,
+        "top": 0.688,
+        "right": 0.283,
+        "bottom": 0.944
+    },
+    "refresh_btn": {
+        "x": 0.266,
+        "y": 0.725
+    },
+    "scheduled_tasks": []
+}
