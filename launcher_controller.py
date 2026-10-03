@@ -61,3 +61,14 @@ class LauncherController:
         img = ImageGrab.grab(bbox=bbox)
         img.save(save_path)
         return save_path
+    try:
+    # 原本置頂視窗的程式碼，例如:
+    # win32gui.SetForegroundWindow(hwnd)
+    # win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+        pass
+    except Exception as e:
+    # 若錯誤代碼為 0 (ERROR_SUCCESS)，代表實際上操作已完成，直接忽略
+        if "Error code from Windows: 0" in str(e) or getattr(e, "winerror", None) == 0:
+            pass
+        else:
+            raise e
