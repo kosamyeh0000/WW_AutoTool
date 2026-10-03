@@ -81,10 +81,10 @@ async def status_cmd(interaction: discord.Interaction):
         color = 0x00FF88 if stamina < 200 else 0xFF4444
         embed = discord.Embed(title="🎮 鳴潮 - 即時狀態回報", color=color)
         embed.add_field(
-            name="結核體力", value=f"**{stamina}** / {max_stamina}", inline=True
+            name="日常體力", value=f"**{stamina}** / {max_stamina}", inline=True
         )
         embed.add_field(
-            name="結晶儲備", value=f"**{reserve}** / 480", inline=True
+            name="後備體力", value=f"**{reserve}** / 480", inline=True
         )
         embed.add_field(
             name="每日活躍度", value=f"**{activity}** / 100", inline=True
