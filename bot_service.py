@@ -59,7 +59,10 @@ async def status_cmd(interaction: discord.Interaction):
         loop = asyncio.get_running_loop()
 
         # 1. 於後台執行卡片截圖
-        img_path = await loop.run_in_executor(None, controller.capture_card)
+        card_rect = config.get("card_rect", {})
+        img_path = await loop.run_in_executor(
+            None, controller.capture_card, card_rect
+        )
         if not img_path or not os.path.exists(img_path):
             await interaction.followup.send(
                 "❌ 截圖失敗，請確認鳴潮啟動器是否在前景或未最小化！"
